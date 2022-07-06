@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Category, Blog, Blogger
 from django.views import generic
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
@@ -23,4 +24,6 @@ class BlogListView(generic.ListView):
 
 class BlogDetailView(generic.DetailView):
     model = Blog
-
+    def book_detail_view(request, primary_key):
+        blog = get_object_or_404(Blog, pk=primary_key)
+        return render(request, 'catalog/blog_detail.html', context={'blog': blog})

@@ -1,0 +1,12 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Title: {{ blog.title }}</h1>
+
+  <p><strong>Blogger:</strong> <a href="">{{ blog.blogger }}</a></p> 
+  <p><strong>Content:</strong> {{ blog.content }}</p>
+  <p><strong>Category:</strong> {{ blog.category.all|join:", "}}</p>
+  <p><strong>Comments:</strong> {{ blog.comments }}</p>
+
+ 
+{% endblock %}
