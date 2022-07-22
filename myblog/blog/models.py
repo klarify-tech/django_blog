@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 
+
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=200,help_text= "Enter Category ex Marketing")
@@ -39,3 +40,5 @@ class Blogger(models.Model):
     def __str__(self):
         """String for representing the Model object."""
         return f'{self.last_name}, {self.first_name}' 
+
+
