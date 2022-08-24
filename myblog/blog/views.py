@@ -1,10 +1,76 @@
 from django.shortcuts import render
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 from .models import Category, Blog, Blogger
 from django.views import generic
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required, permission_required
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from blog.forms import addBlogForm
+
+class BlogCreate(CreateView):
+    model = Blog
+    fields=['title','content','category','blogger']
+
+class BlogUpdate(UpdateView):
+    model = Blog
+    fields =['title','content','category','blogger']
+
+class BlogDelete(DeleteView):
+    model = Blog
+    success_url = reverse_lazy('blogs')
+
+class BloggerCreate(CreateView):
+    model = Blogger
+    fields = ['first_name', 'last_name', 'bio']
+    
+
+class BloggerUpdate(UpdateView):
+    model = Blogger
+    fields = '__all__' # Not recommended (potential security issue if more fields added)
+
+
+class BloggerDelete(DeleteView):
+    model = Blogger
+    success_url = reverse_lazy('blogger')
 
 # Create your views here.
+@login_required
+def addBlog(request):
+    #counting number of records
+    pk=Blog.objects.count()+1
+    blog_object=Blog(title=" New",pk=pk)
+    #blog_object = get_object_or_404(Blog,pk=pk)
+    print(blog_object.title)
+    #print(blog_object.category)
+    form = addBlogForm(request.POST or request.GET)
+
+    if request.method == 'POST' and form.is_valid():
+        #print(form)
+        blog_object.title = form.cleaned_data['title_v']
+        blog_object.content = form.cleaned_data['content_v']
+        #blog_object.category = form.cleaned_data['category_v']
+        blog_object.save()
+
+        return HttpResponseRedirect(reverse('blogs') )
+
+    else:
+        print("In else")
+        #form = addBlogForm()
+
+    context = {
+        'form': form,
+        'blog_object': blog_object,
+    }
+
+    return render(request, 'blog/addBlog.html', context) 
+#Will implement the edit blog option later
+
+
+
+
 
 def index(request):
     num_blogs = Blog.objects.all().count()
@@ -26,9 +92,9 @@ def index(request):
 
 class BlogListView(generic.ListView):
     model = Blog
-    #paginate_by = 2
+    paginate_by = 5
     context_object_name = 'blog_list'   # your own name for the list as a template variable
-    queryset = Blog.objects.filter()[:5] # Get 5 books containing the title war
+    queryset = Blog.objects.filter() # Get 5 books containing the title war
     template_name = 'blog/blog_list.html'
 
 class BloggerListView(generic.ListView):

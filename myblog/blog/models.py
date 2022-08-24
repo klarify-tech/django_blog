@@ -15,6 +15,7 @@ class Blog(models.Model):
     content = models.TextField(help_text=' Start writing your blog here')
     category = models.ManyToManyField('Category',help_text='Select a category')
     comments = models.TextField(help_text='Write your comment here')
+    img = models.ImageField(upload_to = "blog/blogs/media/", default ='logo.png')
 
     def __str__(self):
         """String for representing the Model object."""
