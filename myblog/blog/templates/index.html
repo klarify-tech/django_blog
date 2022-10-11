@@ -3,8 +3,28 @@
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
 {% block content %}
-  <h1>New Blog Home</h1>
-  <p>Welcome to My Blog, a website developed by <em>Klarify Inc</em>!</p>
+<div class="container">
+  <img src="http://klarify.tech/wp-content/themes/newsup/images/head-back.jpg" width="1500" height="150">
+  <div class="heading">Django Blog</div>
+</div>
+
+{% if home_list %}
+<ul>
+  {% for blog in home_list %}
+    <li>
+      <p> </p>
+      <img src= "blogs/media/{{blog.img}}" width="500" height="300"> 
+      <a href="{{ blog.get_absolute_url }}">{{ blog.title }}</a> 
+      <p> </p>
+
+    </li>
+  {% endfor %}
+</ul>
+{% else %}
+  <p>There are no blogs .</p>
+{% endif %}
+
+
   <h2>Blog Details</h2>
   <p>The Blog has the following record counts:</p>
   <ul>

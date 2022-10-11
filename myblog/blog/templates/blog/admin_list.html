@@ -1,0 +1,30 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>List of Blogs</h1>  
+  {% if blog_list %}
+  <ul>
+    {% for blog in blog_list %}
+      <li>
+      {{ blog.title }} <a href="{{ blog.get_absolute_url }}"> View</a> <a href="{{blog.get_absolute_update}}"> Edit</a> 
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no blogs .</p>
+  {% endif %}
+
+  <h1>List of Bloggers</h1>
+  {% if blogger_list %}
+  <ul>
+    {% for blogger in blogger_list %}
+      <li>
+        {{ blogger.first_name }} {{blogger.last_name}} <a href=""> Edit</a>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no bloggers .</p>
+  {% endif %}
+
+{% endblock %}

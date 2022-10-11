@@ -25,6 +25,14 @@ class Blog(models.Model):
         """Returns the URL to access a detail record for this blog."""
         return reverse('blog-detail', args=[str(self.id)])
 
+    def get_absolute_update(self):
+        """Returns the URL to access a detail record for this blog."""
+        return reverse( 'blog-update',args=[str(self.id)])
+
+    def get_absolute_id(self):
+        """Returns the URL to access a detail record for this blog."""
+        return reverse('adminview', args=[str(self.id)]) 
+
 
 class Blogger(models.Model):
     first_name = models.CharField(max_length=100)

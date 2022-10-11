@@ -9,14 +9,15 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from blog.forms import addBlogForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class BlogCreate(CreateView):
     model = Blog
-    fields=['title','content','category','blogger']
+    fields=['title','content','category','blogger','img']
 
 class BlogUpdate(UpdateView):
     model = Blog
-    fields =['title','content','category','blogger']
+    fields =['title','content','category','blogger','img']
 
 class BlogDelete(DeleteView):
     model = Blog
@@ -77,18 +78,34 @@ def index(request):
     num_bloggers = Blogger.objects.all().count()
     num_visits = request.session.get('num_visits', 0)
     request.session['num_visits'] = num_visits + 1
-    #user = User.objects.create_user('myusername', 'myemail@crazymail.com', 'mypassword')
-    #user.first_name = 'Test'
-    #user.last_name = 'User'
-    #user.save()
+    
+    model = Blog
+    paginate_by = 5
+    queryset = Blog.objects.filter()
 
     context ={
         'num_blogs':num_blogs,
         'num_bloggers':num_bloggers,
         'num_visits':num_visits,
+        'home_list':queryset
     }
 
     return render(request, 'index.html', context=context)
+
+def newadmin(request):
+    model = Blog
+    paginate_by = 5
+    blogquery = Blog.objects.filter()
+    queryset = Blogger.objects.filter()
+    context = {'blog_list':blogquery,'blogger_list':queryset} 
+    return render(request,'blog/admin_list.html',context=context)
+
+class AdminView(LoginRequiredMixin,generic.ListView):
+    model = Blog
+    paginate_by = 5
+    context_object_name = 'blogger_list' 
+    queryset = Blogger.objects.filter() # Get 5 books containing the title war
+    template_name = 'blog/admin_list.html'
 
 class BlogListView(generic.ListView):
     model = Blog
